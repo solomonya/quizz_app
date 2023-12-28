@@ -1,0 +1,24 @@
+<.header>
+  Listing Quiz
+  <:actions>
+    <.link href={~p"/quiz/new"}>
+      <.button>New Quiz</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="quiz" rows={@quiz_collection} row_click={&JS.navigate(~p"/quiz/#{&1}")}>
+  <:col :let={quiz} label="Title"><%= quiz.title %></:col>
+  <:col :let={quiz} label="Description"><%= quiz.description %></:col>
+  <:action :let={quiz}>
+    <div class="sr-only">
+      <.link navigate={~p"/quiz/#{quiz}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/quiz/#{quiz}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={quiz}>
+    <.link href={~p"/quiz/#{quiz}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

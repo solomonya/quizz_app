@@ -18,7 +18,7 @@ defmodule QuizzAppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    resources "/quiz", QuizController, only: [:create, :index]
+    resources "/quiz", QuizController
   end
 
   # Other scopes may use custom stacks.

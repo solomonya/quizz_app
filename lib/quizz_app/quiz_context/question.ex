@@ -1,11 +1,11 @@
-defmodule QuizzApp.Question do
+defmodule QuizzApp.QuizContext.Question do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "question" do
     field :question_text, :string
     field :question_meta_info, :string
-    belongs_to :quiz, QuizzApp.Quiz
+    belongs_to :quiz, QuizzApp.QuizContext.Quiz
 
     timestamps(type: :utc_datetime)
   end

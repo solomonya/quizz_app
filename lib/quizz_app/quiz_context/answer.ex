@@ -1,4 +1,4 @@
-defmodule QuizzApp.Answer do
+defmodule QuizzApp.QuizContext.Answer do
   use Ecto.Schema
   import Ecto.Changeset
 

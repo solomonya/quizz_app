@@ -1,31 +1,69 @@
 defmodule QuizzAppWeb.QuizController do
   use QuizzAppWeb, :controller
 
-  def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
-  end
-
-  def create(conn, %{"file" => _file_params}) do
-    put_flash(conn, :info, "Quiz successfully uploaded!")
-  end
+  alias QuizzApp.QuizContext
+  alias QuizzApp.QuizContext.Quiz
 
   def index(conn, _params) do
-    render(conn, :index, layout: false)
+    quiz = QuizContext.list_quiz()
+    render(conn, :index, quiz_collection: quiz)
   end
-end
 
-defmodule QuizzAppWeb.QuizHTML do
-  use QuizzAppWeb, :html
+  def new(conn, _params) do
+    changeset = QuizContext.change_quiz(%Quiz{})
+    render(conn, :new, changeset: changeset)
+  end
 
-  def index(assigns) do
-    ~H"""
-    <h1>Hello world</h1>
-    <form path="/quiz/create/" method="POST">
-      <input type="file" name="file" />
-      <input type="submit" value="Загрузить" />
-    </form>
-    """
+  def create(conn, %{"quiz" => quiz_params}) do
+    quiz_params |> IO.inspect()
+
+    case QuizContext.create_quiz(quiz_params) do
+      {:ok, quiz} ->
+        if upload = quiz_params["quiz_file"] do
+          extension = Path.extname(upload.filename)
+          File.cp(upload.path, "/media/#{quiz.id}_quiz_file#{extension}")
+        end
+
+        conn
+        |> put_flash(:info, "Quiz created successfully.")
+        |> redirect(to: ~p"/quiz/#{quiz}")
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, :new, changeset: changeset)
+    end
+  end
+
+  def show(conn, %{"id" => id}) do
+    quiz = QuizContext.get_quiz!(id)
+    render(conn, :show, quiz: quiz)
+  end
+
+  def edit(conn, %{"id" => id}) do
+    quiz = QuizContext.get_quiz!(id)
+    changeset = QuizContext.change_quiz(quiz)
+    render(conn, :edit, quiz: quiz, changeset: changeset)
+  end
+
+  def update(conn, %{"id" => id, "quiz" => quiz_params}) do
+    quiz = QuizContext.get_quiz!(id)
+
+    case QuizContext.update_quiz(quiz, quiz_params) do
+      {:ok, quiz} ->
+        conn
+        |> put_flash(:info, "Quiz updated successfully.")
+        |> redirect(to: ~p"/quiz/#{quiz}")
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, :edit, quiz: quiz, changeset: changeset)
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    quiz = QuizContext.get_quiz!(id)
+    {:ok, _quiz} = QuizContext.delete_quiz(quiz)
+
+    conn
+    |> put_flash(:info, "Quiz deleted successfully.")
+    |> redirect(to: ~p"/quiz")
   end
 end
