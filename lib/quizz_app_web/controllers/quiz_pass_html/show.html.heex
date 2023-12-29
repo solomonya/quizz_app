@@ -1,0 +1,24 @@
+<section class="flex flex-col gap-y-5">
+  <h1 class="font-bold text-lg"><%= @title %></h1>
+  <ol class="flex flex-col gap-y-5">
+    <%= for question <- @questions do %>
+      <li class="bg-gray-100 p-5 rounded-md">
+        <h5 class="mb-2 text-base">
+          <%= question.question_text %>
+        </h5>
+        <ul class="flex flex-col gap-y-1">
+          <%= for answer <- question.answers do %>
+            <div>
+              <input
+                type="radio"
+                name={"answer-for-question-#{question.id}"}
+                id={"answer-#{answer.id}"}
+              />
+              <label for={"answer-#{answer.id}"}><%= answer.answer_text %></label>
+            </div>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ol>
+</section>
