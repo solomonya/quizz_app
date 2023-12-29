@@ -1,9 +1,8 @@
-defmodule QuizzApp.CorrectAnswer do
+defmodule QuizzApp.QuizContext.CorrectAnswer do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "correct_answer" do
-
     field :question_id, :id
     field :answer_id, :id
 

@@ -1,0 +1,23 @@
+quiz:
+  title: "Название викторины"
+  description: "Описание викторины"
+  questions:
+    - type: "single_choice"
+      text: "Текст вопроса 1"
+      options:
+        - text: "Ответ 1"
+          correct: true
+        - text: "Ответ 2"
+        - text: "Ответ 3"
+    - type: "multiple_choice"
+      text: "Текст вопроса 2"
+      options:
+        - text: "Ответ 1"
+          correct: true
+        - text: "Ответ 2"
+          correct: true
+        - text: "Ответ 3"
+    - type: "open"
+      text: "Текст вопроса 3"
+      correct_answer: "Правильный ответ"
+

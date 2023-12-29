@@ -19,13 +19,8 @@ defmodule QuizzAppWeb.QuizController do
 
     case QuizContext.create_quiz(quiz_params) do
       {:ok, quiz} ->
-        if upload = quiz_params["quiz_file"] do
-          extension = Path.extname(upload.filename)
-          File.cp(upload.path, "/media/#{quiz.id}_quiz_file#{extension}")
-        end
-
         conn
-        |> put_flash(:info, "Quiz created successfully.")
+        |> put_flash(:info, "Quiz created successfully. File uploaded successfully")
         |> redirect(to: ~p"/quiz/#{quiz}")
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -5,6 +5,7 @@ defmodule QuizzApp.QuizContext.Quiz do
   schema "quiz" do
     field :description, :string
     field :title, :string
+    field :quiz_file, :string
 
     timestamps(type: :utc_datetime)
   end
