@@ -6,6 +6,7 @@ defmodule QuizzApp.QuizContext.Quiz do
     field :description, :string
     field :title, :string
     field :quiz_file, :string
+    has_many :questions, QuizzApp.QuizContext.Question
 
     timestamps(type: :utc_datetime)
   end

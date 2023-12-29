@@ -1,0 +1,32 @@
+{
+  "quiz": {
+    "title": "Общие знания",
+    "description": "Викторина по общим знаниям",
+    "questions": [
+      {
+        "text": "Какой город является столицей Франции?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          { "id": 1, "text": "Париж", "correct": true, "additional_data": {} },
+          { "id": 2, "text": "Лондон", "additional_data": {} },
+          { "id": 3, "text": "Берлин", "additional_data": {} }
+        ]
+      },
+      {
+        "text": "Какие из перечисленных стран находятся в Европе?",
+        "additional_data": {
+          "type": "multiple_choice"
+        },
+        "options": [
+          { "id": 1, "text": "Австралия", "additional_data": {} },
+          { "id": 2, "text": "Италия", "correct": true, "additional_data": {} },
+          { "id": 3, "text": "Германия", "correct": true, "additional_data": {} },
+          { "id": 4, "text": "Канада", "additional_data": {} }
+        ]
+      }
+    ]
+  }
+}
+

@@ -4,6 +4,9 @@ defmodule QuizzApp.QuizContext do
   """
 
   import Ecto.Query, warn: false
+  alias QuizzApp.QuizContext.CorrectAnswer
+  alias QuizzApp.QuizContext.Answer
+  alias QuizzApp.QuizContext.Question
   alias QuizzApp.Repo
 
   alias QuizzApp.QuizContext.Quiz
@@ -57,7 +60,7 @@ defmodule QuizzApp.QuizContext do
       |> Repo.insert()
 
     {:ok, upload_path} = upload_quiz_file(attrs["quiz_file"], res)
-    fill_questions_from_file(upload_path)
+    fill_questions_from_file(upload_path, res)
     res
   end
 
@@ -76,10 +79,43 @@ defmodule QuizzApp.QuizContext do
     {:ok, upload_path}
   end
 
-  defp fill_questions_from_file(upload_path) do
-    result = :yamerl_constr.file(upload_path)
-    IO.inspect(result)
-    {:ok}
+  def fill_questions_from_file(upload_path, {:ok, quiz}) do
+    questions =
+      upload_path |> File.read!() |> Jason.decode!() |> Map.get("quiz") |> Map.get("questions")
+
+    Enum.map(questions, fn q -> process_question(q, quiz.id) end)
+
+    {:ok, questions}
+  end
+
+  defp process_question(
+         %{
+           "text" => text,
+           "additional_data" => additional_data,
+           "options" => options
+         },
+         quiz_id
+       ) do
+    question =
+      %Question{
+        question_text: text,
+        question_meta_info: Jason.encode!(additional_data),
+        quiz_id: quiz_id
+      }
+      |> Repo.insert!()
+
+    Enum.each(options, fn option ->
+      answer =
+        %Answer{
+          answer_text: option["text"],
+          answer_meta_info: Jason.encode!(option["additional_data"])
+        }
+        |> Repo.insert!()
+
+      if option["additional_data"]["correct"] do
+        %CorrectAnswer{question_id: question.id, answer_id: answer.id} |> Repo.insert!()
+      end
+    end)
   end
 
   @doc """
