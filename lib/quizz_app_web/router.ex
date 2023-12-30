@@ -19,7 +19,8 @@ defmodule QuizzAppWeb.Router do
 
     get "/", PageController, :home
     resources "/quiz", QuizController
-    resources "/quiz_pass", QuizPassController, only: [:index, :show]
+    resources "/quiz_pass", QuizPassController, only: [:index]
+    live "/quiz_pass/:quiz_id", QuizPassLive
   end
 
   # Other scopes may use custom stacks.
