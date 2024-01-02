@@ -1,0 +1,15 @@
+<.header>
+  Passing <%= @passing.id %>
+  <:subtitle>This is a passing record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/passing/#{@passing}/edit"}>
+      <.button>Edit passing</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Score"><%= @passing.score %></:item>
+</.list>
+
+<.back navigate={~p"/passing"}>Back to passing</.back>

@@ -1,12 +1,16 @@
 defmodule QuizzAppWeb.QuizPassLive do
+  alias QuizzApp.Accounts
   use QuizzAppWeb, :live_view
-  alias QuizzApp.QuizPassContext
+  alias QuizzApp.QuizPass
 
   def render(assigns) do
     ~H"""
     <section class="flex flex-col gap-y-5">
       <header class="flex justify-between align-center">
-        <h1 class="font-bold text-lg"><%= @title %></h1>
+        <div>
+          <h1 class="font-bold text-lg"><%= @title %></h1>
+          <button phx-click="submit_test">Finish</button>
+        </div>
         <div class="flex flex-col gap-y-3">
           <span>
             Answered: <%= calc_answered_questions_amount(@answered_questions) %> / <%= @questions_amount %>
@@ -38,21 +42,6 @@ defmodule QuizzAppWeb.QuizPassLive do
         !is_correct -> acc
       end
     end)
-  end
-
-  def handle_event("submit_answer", unsigned_params, socket) do
-    {question_id, answer_id} =
-      unsigned_params
-      |> Map.to_list()
-      |> List.first()
-
-    is_correct =
-      QuizPassContext.check_answer_is_correct(
-        String.to_integer(question_id),
-        String.to_integer(answer_id)
-      )
-
-    {:noreply, update(socket, :answered_questions, &(&1 |> Map.put(question_id, is_correct)))}
   end
 
   def question_form(assigns) do
@@ -102,15 +91,45 @@ defmodule QuizzAppWeb.QuizPassLive do
     result
   end
 
-  def mount(%{"quiz_id" => quiz_id}, _session, socket) do
-    quiz = QuizPassContext.get_quiz(quiz_id)
+  def mount(%{"quiz_id" => quiz_id}, session, socket) do
+    quiz = QuizPass.get_quiz(quiz_id)
+    user = Accounts.get_user_by_session_token(session["user_token"])
 
     {:ok,
      socket
+     |> assign(:user, user)
      |> assign(:questions, quiz.questions)
      |> assign(:title, quiz.title)
      |> assign(:questions_amount, length(quiz.questions))
      |> assign(:score_amount_of_one_question, 100 / length(quiz.questions))
+     |> assign(:quiz_id, quiz.id)
      |> assign(:answered_questions, %{})}
+  end
+
+  def handle_event("submit_answer", unsigned_params, socket) do
+    {question_id, answer_id} =
+      unsigned_params
+      |> Map.to_list()
+      |> List.first()
+
+    is_correct =
+      QuizPass.check_answer_is_correct(
+        String.to_integer(question_id),
+        String.to_integer(answer_id)
+      )
+
+    {:noreply, update(socket, :answered_questions, &(&1 |> Map.put(question_id, is_correct)))}
+  end
+
+  def handle_event("submit_test", _params, socket) do
+    attrs = %{
+      user_id: socket.assigns.user.id,
+      quiz_id: socket.assigns.quiz_id,
+      score:
+        calc_score(socket.assigns.answered_questions, socket.assigns.score_amount_of_one_question)
+    }
+
+    QuizPass.create_passing(attrs)
+    {:noreply, socket}
   end
 end

@@ -1,0 +1,8 @@
+<.header>
+  Edit Passing <%= @passing.id %>
+  <:subtitle>Use this form to manage passing records in your database.</:subtitle>
+</.header>
+
+<.passing_form changeset={@changeset} action={~p"/passing/#{@passing}"} />
+
+<.back navigate={~p"/passing"}>Back to passing</.back>

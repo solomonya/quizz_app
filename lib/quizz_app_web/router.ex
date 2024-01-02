@@ -1,6 +1,8 @@
 defmodule QuizzAppWeb.Router do
   use QuizzAppWeb, :router
 
+  import QuizzAppWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,11 @@ defmodule QuizzAppWeb.Router do
     plug :put_root_layout, html: {QuizzAppWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
+  end
+
+  pipeline :auth do
+    plug :require_authenticated_user
   end
 
   pipeline :api do
@@ -16,8 +23,11 @@ defmodule QuizzAppWeb.Router do
 
   scope "/", QuizzAppWeb do
     pipe_through :browser
-
     get "/", PageController, :home
+  end
+
+  scope "/", QuizzAppWeb do
+    pipe_through [:browser, :auth]
     resources "/quiz", QuizController
     resources "/quiz_pass", QuizPassController, only: [:index]
     live "/quiz_pass/:quiz_id", QuizPassLive
@@ -42,6 +52,44 @@ defmodule QuizzAppWeb.Router do
 
       live_dashboard "/dashboard", metrics: QuizzAppWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/", QuizzAppWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{QuizzAppWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/users/register", UserRegistrationLive, :new
+      live "/users/log_in", UserLoginLive, :new
+      live "/users/reset_password", UserForgotPasswordLive, :new
+      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+    end
+
+    post "/users/log_in", UserSessionController, :create
+  end
+
+  scope "/", QuizzAppWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{QuizzAppWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", QuizzAppWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+
+    live_session :current_user,
+      on_mount: [{QuizzAppWeb.UserAuth, :mount_current_user}] do
+      live "/users/confirm/:token", UserConfirmationLive, :edit
+      live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
 end
