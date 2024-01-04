@@ -1,7 +1,7 @@
 defmodule QuizzAppWeb.QuizPassLive do
-  alias QuizzApp.Accounts
   use QuizzAppWeb, :live_view
-  alias QuizzApp.QuizPass
+
+  alias QuizzApp.{Accounts, QuizPass}
 
   def render(assigns) do
     ~H"""
