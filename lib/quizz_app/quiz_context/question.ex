@@ -6,10 +6,7 @@ defmodule QuizzApp.QuizContext.Question do
     field :question_text, :string
     field :question_meta_info, :string
     belongs_to :quiz, QuizzApp.QuizContext.Quiz
-
-    many_to_many :answers, QuizzApp.QuizContext.Answer,
-      join_through: QuizzApp.QuizContext.CorrectAnswer
-
+    has_many :answers, QuizzApp.QuizContext.Answer
     timestamps(type: :utc_datetime)
   end
 

@@ -108,7 +108,8 @@ defmodule QuizzApp.QuizContext do
       answer =
         %Answer{
           answer_text: option["text"],
-          answer_meta_info: Jason.encode!(option["additional_data"])
+          answer_meta_info: Jason.encode!(option["additional_data"]),
+          question_id: question.id
         }
         |> Repo.insert!()
 

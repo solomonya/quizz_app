@@ -34,14 +34,17 @@ defmodule QuizzAppWeb.QuizPassLive do
   end
 
   defp calc_score(answered_questions, score_amount_of_one_question) do
-    answered_questions
-    |> Map.values()
-    |> Enum.reduce(0, fn is_correct, acc ->
-      cond do
-        is_correct -> acc + score_amount_of_one_question
-        !is_correct -> acc
-      end
-    end)
+    score =
+      answered_questions
+      |> Map.values()
+      |> Enum.reduce(0, fn is_correct, acc ->
+        cond do
+          is_correct -> acc + score_amount_of_one_question
+          !is_correct -> acc
+        end
+      end)
+
+    Float.round(score / 1, 1)
   end
 
   defp question_form(assigns) do
@@ -85,8 +88,6 @@ defmodule QuizzAppWeb.QuizPassLive do
   end
 
   defp answers_list(assigns) do
-    IO.inspect(assigns.question)
-
     ~H"""
     <ul class="flex flex-col gap-y-1">
       <%= for answer <- @question.answers do %>

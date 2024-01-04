@@ -1,0 +1,483 @@
+{
+  "quiz": {
+    "title": "Тест по SQL",
+    "description": "Викторина по языку SQL",
+    "questions": [
+      {
+        "text": "Что означает SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "Structured Query Language",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "Simple Query Language",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "System Query Language",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для выборки данных из таблицы в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "SELECT",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "INSERT",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "UPDATE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая функция используется для подсчета количества строк в таблице?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "COUNT",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "SUM",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "AVG",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для обновления данных в таблице?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "UPDATE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "DELETE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "INSERT",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая функция используется для нахождения максимального значения в столбце?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "MAX",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "MIN",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "SUM",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для удаления таблицы из базы данных?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "DROP TABLE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "DELETE TABLE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "REMOVE TABLE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какой оператор используется для объединения данных из двух таблиц?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "JOIN",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "MERGE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "UNION",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для добавления новой записи в таблицу?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "INSERT INTO",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "ADD RECORD",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "UPDATE TABLE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какой оператор используется для фильтрации данных в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "WHERE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "FILTER",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "SELECT",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для изменения структуры таблицы, например, добавления нового столбца?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "ALTER TABLE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "MODIFY TABLE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "CHANGE TABLE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая функция используется для сортировки данных в SQL по возрастанию?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "ASC",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "DESC",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "SORT",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для создания новой таблицы в базе данных?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "CREATE TABLE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "ADD TABLE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "NEW TABLE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какой оператор используется для группировки данных в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "GROUP BY",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "SORT BY",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "FILTER BY",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для удаления данных из таблицы в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "DELETE FROM",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "REMOVE FROM",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "DROP FROM",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая функция используется для нахождения среднего значения в столбце?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "AVG",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "SUM",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "AVERAGE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какой оператор используется для установки условий в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "WHERE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "IF",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "CONDITION",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для создания резервной копии базы данных?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "BACKUP DATABASE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "COPY DATABASE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "SAVE DATABASE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какой оператор используется для обновления данных в SQL на основе условия?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "UPDATE WHERE",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "MODIFY WHERE",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "CHANGE WHERE",
+            "additional_data": {}
+          }
+        ]
+      },
+      {
+        "text": "Какая команда используется для удаления столбца из таблицы в SQL?",
+        "additional_data": {
+          "type": "single_choice"
+        },
+        "options": [
+          {
+            "id": 1,
+            "text": "ALTER TABLE DROP COLUMN",
+            "additional_data": {
+              "correct": true
+            }
+          },
+          {
+            "id": 2,
+            "text": "DELETE COLUMN",
+            "additional_data": {}
+          },
+          {
+            "id": 3,
+            "text": "REMOVE COLUMN",
+            "additional_data": {}
+          }
+        ]
+      }
+    ]
+  }
+}
