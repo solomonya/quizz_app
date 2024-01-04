@@ -1,23 +1,11 @@
 <.header>
-  Listing Passing
-  <:actions>
-    <.link href={~p"/passing/new"}>
-      <.button>New Passing</.button>
-    </.link>
-  </:actions>
+  Listing Passings
 </.header>
 
-<.table id="passing" rows={@passing_collection} row_click={&JS.navigate(~p"/passing/#{&1}")}>
+<.table id="passing" rows={@passing_collection}>
   <:col :let={passing} label="Score"><%= passing.score %></:col>
-  <:action :let={passing}>
-    <div class="sr-only">
-      <.link navigate={~p"/passing/#{passing}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/passing/#{passing}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={passing}>
-    <.link href={~p"/passing/#{passing}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
-  </:action>
+  <:col :let={passing} label="User"><%= passing.user.email %></:col>
+  <:col :let={passing} label="Quiz">
+    <.link navigate={~p"/quiz/#{passing.quiz.id}/edit"}><%= passing.quiz.title %></.link>
+  </:col>
 </.table>

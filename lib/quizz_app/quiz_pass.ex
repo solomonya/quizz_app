@@ -6,7 +6,7 @@ defmodule QuizzApp.QuizPass do
   import Ecto.Query, warn: false
   alias QuizzApp.Repo
 
-  alias QuizzApp.QuizPass.{Passing, QuizUser}
+  alias QuizzApp.QuizPass.Passing
   alias QuizzApp.QuizContext.Quiz
   alias QuizzApp.QuizContext.CorrectAnswer
 
@@ -17,23 +17,34 @@ defmodule QuizzApp.QuizPass do
     |> Map.from_struct()
   end
 
-  def check_answer_is_correct(question_id, answer_id) do
+  def check_answer_is_correct(question_id, answer_id) when is_binary(answer_id) do
     query = from(c in CorrectAnswer, where: c.question_id == ^question_id)
-    correct_answer_id = Repo.all(query) |> Enum.map(fn struct -> struct.id end) |> List.first()
 
-    correct_answer_id == answer_id
+    correct_answer_id =
+      Repo.all(query) |> Enum.map(fn struct -> struct.answer_id end) |> List.first()
+
+    correct_answer_id == String.to_integer(answer_id)
+  end
+
+  def check_answer_is_correct(question_id, answer_id) when is_list(answer_id) do
+    query = from(c in CorrectAnswer, where: c.question_id == ^question_id)
+
+    correct_answer_ids =
+      Repo.all(query) |> Enum.map(fn struct -> struct.answer_id end)
+
+    correct_answers_set = MapSet.new(correct_answer_ids)
+    answers_set = MapSet.new(answer_id |> Enum.map(fn a -> String.to_integer(a) end))
+
+    MapSet.equal?(correct_answers_set, answers_set)
   end
 
   def list_passing do
-    Repo.all(Passing)
+    Repo.all(Passing) |> Repo.preload(:quiz) |> Repo.preload(:user)
   end
 
   def get_passing!(id), do: Repo.get!(Passing, id)
 
   def create_passing(attrs \\ %{}) do
-    %QuizUser{quiz_id: attrs.quiz_id, user_id: attrs.user_id}
-    |> Repo.insert()
-
     %Passing{}
     |> Passing.changeset(attrs)
     |> Repo.insert()

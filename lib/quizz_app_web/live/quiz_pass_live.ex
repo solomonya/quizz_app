@@ -44,7 +44,7 @@ defmodule QuizzAppWeb.QuizPassLive do
     end)
   end
 
-  def question_form(assigns) do
+  defp question_form(assigns) do
     result =
       if Map.has_key?(assigns.answered_questions, "#{assigns.question.id}") do
         if assigns.answered_questions["#{assigns.question.id}"] do
@@ -70,14 +70,7 @@ defmodule QuizzAppWeb.QuizPassLive do
           <h5 class="mb-2 text-base">
             <%= @question.question_text %>
           </h5>
-          <ul class="flex flex-col gap-y-1">
-            <%= for answer <- @question.answers do %>
-              <div>
-                <input type="radio" name={@question.id} id={"answer-#{answer.id}"} value={answer.id} />
-                <label for={"answer-#{answer.id}"}><%= answer.answer_text %></label>
-              </div>
-            <% end %>
-          </ul>
+          <.answers_list question={@question} />
           <button
             type="submit"
             class="w-24 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
@@ -86,6 +79,48 @@ defmodule QuizzAppWeb.QuizPassLive do
           </button>
         </.form>
         """
+      end
+
+    result
+  end
+
+  defp answers_list(assigns) do
+    IO.inspect(assigns.question)
+
+    ~H"""
+    <ul class="flex flex-col gap-y-1">
+      <%= for answer <- @question.answers do %>
+        <.answer question={@question} answer={answer} />
+      <% end %>
+    </ul>
+    """
+  end
+
+  defp answer(assigns) do
+    question_meta_info = Jason.decode!(assigns.question.question_meta_info)
+
+    result =
+      case question_meta_info["type"] do
+        "single_choice" ->
+          ~H"""
+          <div>
+            <input type="radio" name={@question.id} id={"answer-#{@answer.id}"} value={@answer.id} />
+            <label for={"answer-#{@answer.id}"}><%= @answer.answer_text %></label>
+          </div>
+          """
+
+        "multiple_choice" ->
+          ~H"""
+          <div>
+            <input
+              type="checkbox"
+              name={"#{@question.id}[]"}
+              id={"answer-#{@answer.id}"}
+              value={@answer.id}
+            />
+            <label for={"answer-#{@answer.id}"}><%= @answer.answer_text %></label>
+          </div>
+          """
       end
 
     result
@@ -115,7 +150,7 @@ defmodule QuizzAppWeb.QuizPassLive do
     is_correct =
       QuizPass.check_answer_is_correct(
         String.to_integer(question_id),
-        String.to_integer(answer_id)
+        answer_id
       )
 
     {:noreply, update(socket, :answered_questions, &(&1 |> Map.put(question_id, is_correct)))}
@@ -130,6 +165,6 @@ defmodule QuizzAppWeb.QuizPassLive do
     }
 
     QuizPass.create_passing(attrs)
-    {:noreply, socket}
+    {:noreply, push_navigate(socket, to: ~p"/passings")}
   end
 end

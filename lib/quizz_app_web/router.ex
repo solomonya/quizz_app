@@ -29,7 +29,7 @@ defmodule QuizzAppWeb.Router do
   scope "/", QuizzAppWeb do
     pipe_through [:browser, :auth]
     resources "/quiz", QuizController
-    resources "/quiz_pass", QuizPassController, only: [:index]
+    resources "/passings", PassingController
     live "/quiz_pass/:quiz_id", QuizPassLive
   end
 
