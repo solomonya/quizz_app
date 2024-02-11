@@ -6,6 +6,6 @@
   <:col :let={passing} label="Score"><%= passing.score %></:col>
   <:col :let={passing} label="User"><%= passing.user.email %></:col>
   <:col :let={passing} label="Quiz">
-    <.link navigate={~p"/quiz/#{passing.quiz.id}/edit"}><%= passing.quiz.title %></.link>
+    <.link navigate={~p"/quiz_pass/#{passing.quiz.id}"}><%= passing.quiz.title %></.link>
   </:col>
 </.table>
