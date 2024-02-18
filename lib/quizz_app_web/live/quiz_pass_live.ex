@@ -2,13 +2,14 @@ defmodule QuizzAppWeb.QuizPassLive do
   use QuizzAppWeb, :live_view
 
   alias QuizzApp.{Accounts, QuizPass}
+  alias Phoenix.LiveView.JS
 
   def render(assigns) do
     ~H"""
     <section class="flex flex-col gap-y-5">
       <header class="flex justify-between align-center">
         <div>
-          <h1 class="font-bold text-lg"><%= @title %></h1>
+          <h1 id={"quiz_passing_#{assigns.quiz.id}"} class="font-bold text-lg"><%= @title %></h1>
           <button phx-click="submit_test">Finish</button>
         </div>
         <div class="flex flex-col gap-y-3">
@@ -25,6 +26,7 @@ defmodule QuizzAppWeb.QuizPassLive do
           </li>
         <% end %>
       </ol>
+      <.pagination total={@questions_amount} page_size={5} />
     </section>
     """
   end
@@ -134,11 +136,12 @@ defmodule QuizzAppWeb.QuizPassLive do
     {:ok,
      socket
      |> assign(:user, user)
-     |> assign(:questions, quiz.questions)
      |> assign(:title, quiz.title)
      |> assign(:questions_amount, length(quiz.questions))
      |> assign(:score_amount_of_one_question, 100 / length(quiz.questions))
      |> assign(:quiz_id, quiz.id)
+     |> assign(:quiz, quiz)
+     |> assign(:questions, get_paginated_questions(quiz.questions, 1))
      |> assign(:answered_questions, %{})}
   end
 
@@ -167,5 +170,25 @@ defmodule QuizzAppWeb.QuizPassLive do
 
     QuizPass.create_passing(attrs)
     {:noreply, push_navigate(socket, to: ~p"/passings")}
+  end
+
+  def handle_event("page_changed", %{"page" => page}, socket) do
+    questions = get_paginated_questions(socket.assigns.quiz.questions, String.to_integer(page))
+    JS.dispatch("quiz_app:scroll_to", to: "#quiz_passing_#{socket.assigns.quiz.id}")
+
+    {:noreply,
+     update(
+       socket,
+       :questions,
+       fn _arg ->
+         questions
+       end
+     )}
+  end
+
+  defp get_paginated_questions(questions, page) do
+    start = (page - 1) * 5
+    last_idx = page * 5 - 1
+    Enum.slice(questions, start..last_idx)
   end
 end

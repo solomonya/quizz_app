@@ -671,4 +671,28 @@ defmodule QuizzAppWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  attr :total, :integer, required: true
+  attr :page_size, :integer, required: true
+
+  def pagination(assigns) do
+    assigns = assign(assigns, :pages, Float.ceil(assigns.total / assigns.page_size) |> round)
+
+    ~H"""
+    <ul x-data="{ page: 1 }" class="flex gap-x-2 w-fit">
+      <%= for num <- Enum.to_list(1..@pages)do %>
+        <li>
+          <button
+            phx-click="page_changed"
+            phx-value-page={num}
+            x-bind:class={"{ 'rounded-lg w-7 h-7 border': true, 'bg-blue-500 text-white': #{num} === page }"}
+            x-on:click={"page = #{num}"}
+          >
+            <%= num %>
+          </button>
+        </li>
+      <% end %>
+    </ul>
+    """
+  end
 end
