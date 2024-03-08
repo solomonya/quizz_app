@@ -6,10 +6,10 @@ defmodule QuizzAppWeb.QuizPassLive do
 
   def render(assigns) do
     ~H"""
-    <section class="flex flex-col gap-y-5">
+    <section class="flex flex-col gap-y-5" phx-hook="PageLeaving" id={"quiz_passing_#{assigns.quiz.id}"}>
       <header class="flex justify-between align-center">
         <div>
-          <h1 id={"quiz_passing_#{assigns.quiz.id}"} class="font-bold text-lg"><%= @title %></h1>
+          <h1 class="font-bold text-lg"><%= @title %></h1>
           <button phx-click="submit_test">Finish</button>
         </div>
         <div class="flex flex-col gap-y-3">
@@ -184,6 +184,11 @@ defmodule QuizzAppWeb.QuizPassLive do
          questions
        end
      )}
+  end
+
+  def handle_event("page-disconnected", _payload, socket) do
+    IO.puts("TEST PASSING DISCONNECTED")
+    {:noreply, socket}
   end
 
   defp get_paginated_questions(questions, page) do
