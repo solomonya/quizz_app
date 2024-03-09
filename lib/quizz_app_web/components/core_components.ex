@@ -679,13 +679,13 @@ defmodule QuizzAppWeb.CoreComponents do
     assigns = assign(assigns, :pages, Float.ceil(assigns.total / assigns.page_size) |> round)
 
     ~H"""
-    <ul x-data="{ page: 1 }" class="flex gap-x-2 w-fit">
+    <ul x-data="{ page: 1 }" class="join">
       <%= for num <- Enum.to_list(1..@pages)do %>
         <li>
           <button
             phx-click="page_changed"
             phx-value-page={num}
-            x-bind:class={"{ 'rounded-lg w-7 h-7 border': true, 'bg-blue-500 text-white': #{num} === page }"}
+            x-bind:class={"{ 'join-item btn': true, 'btn-active': #{num} === page }"}
             x-on:click={"page = #{num}"}
           >
             <%= num %>

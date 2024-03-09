@@ -6,7 +6,7 @@ defmodule QuizzApp.QuizPass do
   import Ecto.Query, warn: false
   alias QuizzApp.Repo
 
-  alias QuizzApp.QuizPass.Passing
+  alias QuizzApp.QuizPass.{Passing, Snapshot}
   alias QuizzApp.QuizContext.Quiz
   alias QuizzApp.QuizContext.CorrectAnswer
 
@@ -62,5 +62,18 @@ defmodule QuizzApp.QuizPass do
 
   def change_passing(%Passing{} = passing, attrs \\ %{}) do
     Passing.changeset(passing, attrs)
+  end
+
+  def get_snapshot(%{:user_id => user_id, :quiz_id => quiz_id}) do
+    Snapshot
+    |> Ecto.Query.where(quiz_id: ^quiz_id)
+    |> Ecto.Query.where(user_id: ^user_id)
+    |> Repo.one()
+  end
+
+  def add_snapshot(attrs \\ %{}) do
+    %Snapshot{}
+    |> Snapshot.changeset(attrs)
+    |> Repo.insert()
   end
 end

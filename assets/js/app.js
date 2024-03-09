@@ -43,9 +43,9 @@ let Hooks = {};
 Hooks.PageLeaving = {
   mounted() {
     window.addEventListener("beforeunload", (e) => {
-    e.preventDefault();
-    this.pushEvent("page-disconnected");
-  });
+      e.preventDefault();
+      this.pushEvent("page-disconnected");
+    });
   },
   /*destroyed() {
     window.removeEventListener("beforeunload", this.handle);
@@ -53,7 +53,7 @@ Hooks.PageLeaving = {
 }
 
 let liveSocket = new LiveSocket("/live", Socket, {
-  params: { _csrf_token: csrfToken }, 
+  params: { _csrf_token: csrfToken },
   dom: {
     onBeforeElUpdated(from, to) {
       cloneAlpineJSData(from, to)

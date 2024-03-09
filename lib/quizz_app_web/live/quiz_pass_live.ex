@@ -6,11 +6,15 @@ defmodule QuizzAppWeb.QuizPassLive do
 
   def render(assigns) do
     ~H"""
-    <section class="flex flex-col gap-y-5" phx-hook="PageLeaving" id={"quiz_passing_#{assigns.quiz.id}"}>
+    <section
+      class="flex flex-col gap-y-5"
+      id={"quiz_passing_#{assigns.quiz.id}"}
+      phx-hook="PageLeaving"
+    >
       <header class="flex justify-between align-center">
         <div>
-          <h1 class="font-bold text-lg"><%= @title %></h1>
-          <button phx-click="submit_test">Finish</button>
+          <h1 class="font-bold text-lg mb-3"><%= @title %></h1>
+          <button class="btn btn-sm btn-error" phx-click="submit_test">Finish</button>
         </div>
         <div class="flex flex-col gap-y-3">
           <span>
@@ -69,17 +73,14 @@ defmodule QuizzAppWeb.QuizPassLive do
         ~H"""
         <.form
           for={nil}
-          class="flex flex-col gap-y-3 bg-gray-100 p-5 rounded-md"
+          class="flex items-start flex-col gap-y-3 bg-gray-100 p-5 rounded-md"
           phx-submit="submit_answer"
         >
           <h5 class="mb-2 text-base">
             <%= @question.question_text %>
           </h5>
           <.answers_list question={@question} />
-          <button
-            type="submit"
-            class="w-24 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-          >
+          <button type="submit" class="btn btn-primary btn-sm">
             Confirm
           </button>
         </.form>
@@ -91,7 +92,7 @@ defmodule QuizzAppWeb.QuizPassLive do
 
   defp answers_list(assigns) do
     ~H"""
-    <ul class="flex flex-col gap-y-1">
+    <ul class="flex flex-col gap-y-3">
       <%= for answer <- @question.answers do %>
         <.answer question={@question} answer={answer} />
       <% end %>
@@ -106,10 +107,16 @@ defmodule QuizzAppWeb.QuizPassLive do
       case question_meta_info["type"] do
         "single_choice" ->
           ~H"""
-          <div>
-            <input type="radio" name={@question.id} id={"answer-#{@answer.id}"} value={@answer.id} />
-            <label for={"answer-#{@answer.id}"}><%= @answer.answer_text %></label>
-          </div>
+          <label class="flex items-center gap-x-3 cursor-pointer">
+            <input
+              class="radio radio-sm"
+              type="radio"
+              name={@question.id}
+              id={"answer-#{@answer.id}"}
+              value={@answer.id}
+            />
+            <span class="label-text" for={"answer-#{@answer.id}"}><%= @answer.answer_text %></span>
+          </label>
           """
 
         "multiple_choice" ->
@@ -131,18 +138,34 @@ defmodule QuizzAppWeb.QuizPassLive do
 
   def mount(%{"quiz_id" => quiz_id}, session, socket) do
     quiz = QuizPass.get_quiz(quiz_id)
+    questions_amount = length(quiz.questions)
     user = Accounts.get_user_by_session_token(session["user_token"])
+
+    snapshot =
+      QuizPass.get_snapshot(%{:quiz_id => quiz.id, :user_id => user.id})
+
+    initial_passing_state =
+      case snapshot do
+        nil ->
+          %{:page => 1, :answered_questions => %{}}
+
+        existing_passing ->
+          existing_passing
+      end
+
+    IO.inspect(initial_passing_state)
 
     {:ok,
      socket
      |> assign(:user, user)
      |> assign(:title, quiz.title)
-     |> assign(:questions_amount, length(quiz.questions))
-     |> assign(:score_amount_of_one_question, 100 / length(quiz.questions))
+     |> assign(:questions_amount, questions_amount)
+     |> assign(:score_amount_of_one_question, 100 / questions_amount)
      |> assign(:quiz_id, quiz.id)
      |> assign(:quiz, quiz)
-     |> assign(:questions, get_paginated_questions(quiz.questions, 1))
-     |> assign(:answered_questions, %{})}
+     |> assign(:page, initial_passing_state.page)
+     |> assign(:questions, get_paginated_questions(quiz.questions, initial_passing_state.page))
+     |> assign(:answered_questions, initial_passing_state.answered_questions)}
   end
 
   def handle_event("submit_answer", unsigned_params, socket) do
@@ -177,17 +200,34 @@ defmodule QuizzAppWeb.QuizPassLive do
     JS.dispatch("quiz_app:scroll_to", to: "#quiz_passing_#{socket.assigns.quiz.id}")
 
     {:noreply,
-     update(
-       socket,
+     socket
+     |> update(
        :questions,
        fn _arg ->
          questions
        end
-     )}
+     )
+     |> update(:page, fn _arg -> String.to_integer(page) end)}
   end
 
   def handle_event("page-disconnected", _payload, socket) do
     IO.puts("TEST PASSING DISCONNECTED")
+
+    _passing_state =
+      %{
+        :page => socket.assigns.page,
+        :answered_questions => socket.assigns.answered_questions
+      }
+      |> Jason.encode!()
+
+    """
+    QuizPass.add_snapshot(%{
+    :state => passing_state,
+    :user_id => socket.assigns.user.id,
+    :quiz_id => socket.assigns.quiz.id
+    })
+    """
+
     {:noreply, socket}
   end
 
